@@ -43,7 +43,7 @@
                 "key": "county",
                 "fields": ["cases"]
             }},
-            {"calculate": "datum.cases + 0.1", "as": "truecases"}
+            {"calculate": "datum.cases + 0.1", "as": "Current Cases"}
     ],
             "projection": {
                 "type": "albersUsa",
@@ -54,7 +54,7 @@
             },
             "encoding": {
                 "color": {
-                    "field": "truecases",
+                    "field": "Current Cases",
                     "type": "quantitative",
                     "scale": {"type": "log"}
                 },
