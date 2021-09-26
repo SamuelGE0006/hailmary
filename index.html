@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Vega-Lite Bar Chart</title>
+    <title>FIT3179 Week9 Homework Sameul Grindon-Ekins</title>
     <meta charset="utf-8" />
 
     <script src="https://cdn.jsdelivr.net/npm/vega@5.20.2"></script>
@@ -16,40 +16,55 @@
     </style>
   </head>
   <body>
-    <h1>Template for Embedding Vega-Lite Visualization</h1>
+    <h1>Week 9 Homework: Covid-19 Cases in the USA</h1>
     <!-- Container for the visualization -->
     <div id="vis"></div>
 
     <script>
       // Assign the specification to a local variable vlSpec.
       var vlSpec = {
-        $schema: 'https://vega.github.io/schema/vega-lite/v5.json',
-        data: {
-          values: [
-            {a: 'C', b: 2},
-            {a: 'C', b: 7},
-            {a: 'C', b: 4},
-            {a: 'D', b: 1},
-            {a: 'D', b: 2},
-            {a: 'D', b: 6},
-            {a: 'E', b: 8},
-            {a: 'E', b: 4},
-            {a: 'E', b: 7}
-          ]
-        },
-        mark: 'bar',
-        encoding: {
-          y: {field: 'a', type: 'nominal'},
-          x: {
-            aggregate: 'average',
-            field: 'b',
-            type: 'quantitative',
-            axis: {
-              title: 'Average of b'
+        "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+        "title": "Covid Cases by US County over Time",
+        "width": 850,
+        "height": 600,
+        "data": {
+            "url": "https://raw.githubusercontent.com/SamuelGE0006/FIT3179W9Homework/main/UScountiestopo.topojson",
+            "format": {
+                "type": "topojson",
+                "feature": "counties"
             }
-          }
-        }
-      };
+        },
+        "transform": [{
+            "lookup": "properties.name",
+            "from": {
+                "data": {
+                    "url": "https://raw.githubusercontent.com/nytimes/covid-19-data/master/us-counties.csv"
+                },
+                "key": "county",
+                "fields": ["cases"]
+            }},
+            {"calculate": "datum.cases + 0.1", "as": "truecases"}
+    ],
+            "projection": {
+                "type": "albersUsa",
+                "center": [-120,50],
+                "scale": 1100},
+            "mark": {
+                "type": "geoshape", "stroke": "white"
+            },
+            "encoding": {
+                "color": {
+                    "field": "truecases",
+                    "type": "quantitative",
+                    "scale": {"type": "log"}
+                },
+                "tooltip": [
+                    {"field": "properties.name", "type": "nominal", "title": "county"},
+                    {"field": "cases", "type": "quantitative"}
+                ]
+            }
+            };
+
 
       // Embed the visualization in the container with id `vis`
       vegaEmbed('#vis', vlSpec);
